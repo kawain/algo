@@ -209,7 +209,7 @@ class Game:
                 # 全部開く
                 self.obj_arr[y][x].visited = True
 
-                # 周囲の爆弾を数える
+                # 再帰する
                 self.search(y3, x3)
 
 

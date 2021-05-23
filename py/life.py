@@ -32,10 +32,10 @@ class Life:
                 r = row * self.cell
                 c = col * self.cell
                 if self.board[row][col] == 1:
-                    pygame.draw.rect(screen, self.blue,
+                    pygame.draw.rect(screen, self.white,
                                      (c, r, self.cell, self.cell))
                 else:
-                    pygame.draw.rect(screen, self.white,
+                    pygame.draw.rect(screen, self.black,
                                      (c, r, self.cell, self.cell), 1)
 
     def generation(self):
@@ -97,13 +97,13 @@ class Life:
 def main():
     pygame.init()
     pygame.display.set_caption("Life Game")
-    obj = Life()
+    obj = Life(1200, 800)
     screen = pygame.display.set_mode((obj.width, obj.height))
     clock = pygame.time.Clock()
 
     while True:
         clock.tick(10)
-        screen.fill(obj.white)
+        screen.fill(obj.black)
         obj.generation()
         obj.draw(pygame, screen)
         pygame.display.update()

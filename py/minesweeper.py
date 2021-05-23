@@ -1,6 +1,6 @@
 import pygame
-import numpy as np
 import sys
+import random
 
 
 class MyRect(pygame.Rect):
@@ -23,24 +23,24 @@ class MyRect(pygame.Rect):
 class Game:
     def __init__(self, level=1):
         # 初級：9×9のマスに10個の地雷
-        l1 = (9, 9, 10)
+        l_1 = (9, 9, 10)
         # 中級：16×16のマスに40個の地雷
-        l2 = (16, 16, 40)
+        l_2 = (16, 16, 40)
         # 上級：30×16のマスに99個の地雷
-        l3 = (30, 16, 99)
+        l_3 = (30, 16, 99)
         # レベル選択
         if level == 2:
-            self.col = l2[0]
-            self.row = l2[1]
-            self.bomb = l2[2]
+            self.col = l_2[0]
+            self.row = l_2[1]
+            self.bomb = l_2[2]
         elif level == 3:
-            self.col = l3[0]
-            self.row = l3[1]
-            self.bomb = l3[2]
+            self.col = l_3[0]
+            self.row = l_3[1]
+            self.bomb = l_3[2]
         else:
-            self.col = l1[0]
-            self.row = l1[1]
-            self.bomb = l1[2]
+            self.col = l_1[0]
+            self.row = l_1[1]
+            self.bomb = l_1[2]
         # セルの大きさ
         self.cell = 30
         # 幅
@@ -57,6 +57,7 @@ class Game:
         self.orangered = (255, 69, 0)
         self.dimgray = (105, 105, 105)
         self.navy = (0, 0, 128)
+        self.gray = (128, 128, 128)
         # ゲームオーバー
         self.game_over = False
         # ゲームクリア
@@ -70,52 +71,53 @@ class Game:
         # 残りのセルの配列 0 にする
         tmp = [0] * self.other
         # 配列を合算
-        tmp = np.array(tmp + bomb)
+        tmp = tmp + bomb
         # 配列をシャッフル
-        np.random.shuffle(tmp)
+        random.shuffle(tmp)
         # 配列の形を2次元にする
-        tmp = tmp.reshape(self.row, self.col)
+        board = []
+        i = 0
+        for _ in range(self.row):
+            cols = []
+            for _ in range(self.col):
+                cols.append(tmp[i])
+                i += 1
+            board.append(cols)
+
         # 周辺の爆弾の場所を数えて更新
         for y in range(self.row):
             for x in range(self.col):
                 # 爆弾の場所なら無視
-                if tmp[y, x] == 9:
+                if board[y][x] == 9:
                     continue
-                tmp[y, x] = self.bomb_around_count(tmp, y, x)
+                board[y][x] = self.bomb_around_count(board, y, x)
 
-        return self.make_obj_arr(tmp.tolist())
+        return self.make_obj_arr(board)
 
-    def bomb_around_count(self, arr, y, x):
+    def bomb_around_count(self, arr, row, col):
         count = 0
-        # 相対座標
-        for y2 in range(-1, 2, 1):
-            for x2 in range(-1, 2, 1):
+        # max, min ではじめから範囲外対策
+        for r in range(max(0, row - 1), min(self.row - 1, row + 1) + 1):
+            for c in range(max(0, col - 1), min(self.col - 1, col + 1) + 1):
                 # 起点は無視
-                if y2 == 0 and x2 == 0:
-                    continue
-
-                # 絶対座標を求める
-                y3 = y + y2
-                x3 = x + x2
-
-                # 範囲外チェック
-                if (y3 < 0) or (y3 >= self.row) or (x3 < 0) or (x3 >= self.col):
+                if row == r and col == c:
                     continue
 
                 # 周囲の爆弾を数える
-                if arr[y3, x3] == 9:
+                if arr[r][c] == 9:
                     count += 1
 
         return count
 
-    def make_obj_arr(self, lst):
+    def make_obj_arr(self, arr):
+        # MyRectの配列を作成
         obj_arr = []
         for y in range(self.row):
             tmp = []
             for x in range(self.col):
                 left = x * self.cell
                 top = y * self.cell
-                tmp.append(MyRect(left, top, self.cell, self.cell, lst[y][x]))
+                tmp.append(MyRect(left, top, self.cell, self.cell, arr[y][x]))
             obj_arr.append(tmp)
 
         return obj_arr
@@ -195,22 +197,14 @@ class Game:
             self.obj_arr[y][x].visited = True
             return
 
-        # 相対座標
-        for y2 in range(-1, 2, 1):
-            for x2 in range(-1, 2, 1):
-                # 絶対座標を求める
-                y3 = y + y2
-                x3 = x + x2
-
-                # 範囲外チェック
-                if (y3 < 0) or (y3 >= self.row) or (x3 < 0) or (x3 >= self.col):
-                    continue
-
+        # max, min ではじめから範囲外対策
+        for r in range(max(0, y - 1), min(self.row - 1, y + 1) + 1):
+            for c in range(max(0, x - 1), min(self.col - 1, x + 1) + 1):
                 # 全部開く
                 self.obj_arr[y][x].visited = True
 
                 # 再帰する
-                self.search(y3, x3)
+                self.search(r, c)
 
 
 def text(screen, obj, font, color, txt):
@@ -245,14 +239,17 @@ def main():
 
     while True:
         clock.tick(10)
-        screen.fill(obj.white)
+        if obj.game_over or obj.game_clear:
+            screen.fill(obj.gray)
+        else:
+            screen.fill(obj.white)
         obj.draw(pygame, screen, font1)
         if obj.game_over:
             text(screen, obj, font3, obj.black, "Game Over")
-            text(screen, obj, font2, obj.orangered, "Game Over")
+            text(screen, obj, font2, obj.white, "Game Over")
         elif obj.game_clear:
             text(screen, obj, font3, obj.black, "Game Clear")
-            text(screen, obj, font2, obj.orangered, "Game Clear")
+            text(screen, obj, font2, obj.white, "Game Clear")
 
         pygame.display.update()
 

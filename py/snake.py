@@ -51,7 +51,7 @@ class Game:
         self.food_point.row = random.randint(0, self.row - 1)
         self.food_point.col = random.randint(0, self.col - 1)
 
-    def draw_food(self, screen):
+    def draw_food(self, pygame, screen):
         r = self.food_point.row * self.cell
         c = self.food_point.col * self.cell
         pygame.draw.rect(screen, self.red, (c, r, self.cell, self.cell))
@@ -112,10 +112,18 @@ def main():
         while obj.game_over:
             clock.tick(1)
             screen.fill(obj.green)
-            font1 = pygame.font.SysFont("Consolas", 50)
-            value = font1.render("Game Over", True, obj.black)
-            screen.blit(value, [100, 100])
-
+            font1 = pygame.font.SysFont("Consolas", 30)
+            value = font1.render(
+                "Game Over! Press c for re-challenge", True, obj.black)
+            text_width = value.get_width()
+            text_height = value.get_height()
+            screen.blit(
+                value,
+                [
+                    obj.W // 2 - text_width // 2,
+                    obj.H // 2 - text_height // 2,
+                ]
+            )
             pygame.display.update()
 
             for event in pygame.event.get():
@@ -129,7 +137,7 @@ def main():
         clock.tick(10)
         screen.fill(obj.white)
         obj.draw_back(pygame, screen)
-        obj.draw_food(screen)
+        obj.draw_food(pygame, screen)
         obj.snake_move()
         obj.draw_snake(pygame, screen)
         pygame.display.update()

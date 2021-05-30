@@ -46,16 +46,18 @@ proc accept(self: Maru3, obj: Visitor) =
   obj.visit(self)
 
 
+proc main() =
+  let v1: Visitor = Visitor1()
 
-let v1: Visitor = Visitor1()
+  let maru1 = Maru1(name: "その１")
+  maru1.accept(v1)
 
-let maru1 = Maru1(name: "その１")
-maru1.accept(v1)
+  let maru2 = Maru2(name: "その２")
+  maru2.accept(v1)
 
-let maru2 = Maru2(name: "その２")
-maru2.accept(v1)
+  let maru3 = Maru3(name: "その３")
+  maru3.accept(v1)
 
-let maru3 = Maru3(name: "その３")
-maru3.accept(v1)
 
+main()
 

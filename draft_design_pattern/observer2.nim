@@ -6,13 +6,9 @@ import strformat
 
 
 type
-
-
   Observer = ref object of RootObj
   DigitObserver = ref object of Observer
   GraphObserver = ref object of Observer
-
-
 
   NumberGenerator = ref object of RootObj
     observers: seq[Observer]
@@ -43,8 +39,6 @@ method update(self: GraphObserver, ganerator: NumberGenerator) =
   echo ""
 
 
-
-
 method addObserver(self: NumberGenerator, observer: Observer) {.base.} =
   self.observers.add(observer)
 
@@ -70,8 +64,6 @@ method execute(self: RandomNumberGenerator) =
     self.number = rand(10)
     # 親のメソッドを呼び出したい時
     procCall NumberGenerator(self).notifyObserver()
-
-
 
 
 proc main() =

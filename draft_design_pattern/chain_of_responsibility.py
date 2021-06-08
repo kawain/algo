@@ -7,14 +7,14 @@ from abc import ABC
 
 
 class Account(ABC):
-    def __init__(self, balance):
-        self.successor = None
-        self.balance = balance
+    def __init__(self, balance: int) -> None:
+        self.successor: "Account" = None
+        self.balance: int = balance
 
-    def setNext(self, account: "Account"):
-        self.successor = account
+    def setNext(self, account: "Account") -> None:
+        self.successor: "Account" = account
 
-    def pay(self, amountToPay):
+    def pay(self, amountToPay: int) -> None:
         if self.canPay(amountToPay):
             print(f"{self.__class__.__name__}で{amountToPay}ドル支払われました。")
         elif self.successor is not None:
@@ -23,22 +23,22 @@ class Account(ABC):
         else:
             print("残高が十分なアカウントがありません")
 
-    def canPay(self, amount):
+    def canPay(self, amount: int) -> bool:
         return self.balance >= amount
 
 
 class Bank(Account):
-    def __init__(self, balance):
+    def __init__(self, balance) -> None:
         super().__init__(balance)
 
 
 class Paypal(Account):
-    def __init__(self, balance):
+    def __init__(self, balance) -> None:
         super().__init__(balance)
 
 
 class Bitcoin(Account):
-    def __init__(self, balance):
+    def __init__(self, balance) -> None:
         super().__init__(balance)
 
 

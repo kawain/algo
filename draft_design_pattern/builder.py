@@ -29,19 +29,19 @@ class BurgerBuilder:
         self.lettuce = False
         self.tomato = False
 
-    def addPepperoni(self) -> bool:
+    def addPepperoni(self) -> "BurgerBuilder":
         self.pepperoni = True
         return self
 
-    def addLettuce(self) -> bool:
+    def addLettuce(self) -> "BurgerBuilder":
         self.lettuce = True
         return self
 
-    def addCheese(self) -> bool:
+    def addCheese(self) -> "BurgerBuilder":
         self.cheese = True
         return self
 
-    def addTomato(self) -> bool:
+    def addTomato(self) -> "BurgerBuilder":
         self.tomato = True
         return self
 

@@ -6,58 +6,58 @@ from abc import ABC, abstractmethod
 
 # レシーバ
 class Bulb:
-    def turnOn(self):
+    def turnOn(self) -> None:
         print("電球がつきました！")
 
-    def turnOff(self):
+    def turnOff(self) -> None:
         print("真っ暗！")
 
 
 # 各コマンドを実装するインターフェイスを記述し、コマンドのセットを記述
 
 class Command(ABC):
-    def __init__(self, bulb: Bulb):
+    def __init__(self, bulb: Bulb) -> None:
         self.bulb: Bulb = bulb
 
     @abstractmethod
-    def execute(self):
+    def execute(self) -> None:
         pass
 
     @abstractmethod
-    def undo(self):
+    def undo(self) -> None:
         pass
 
     @abstractmethod
-    def redo(self):
+    def redo(self) -> None:
         pass
 
 
 # コマンド
 class TurnOn(Command):
-    def execute(self):
+    def execute(self) -> None:
         self.bulb.turnOn()
 
-    def undo(self):
+    def undo(self) -> None:
         self.bulb.turnOff()
 
-    def redo(self):
+    def redo(self) -> None:
         self.execute()
 
 
 class TurnOff(Command):
-    def execute(self):
+    def execute(self) -> None:
         self.bulb.turnOff()
 
-    def undo(self):
+    def undo(self) -> None:
         self.bulb.turnOn()
 
-    def redo(self):
+    def redo(self) -> None:
         self.execute()
 
 
 # クライアントが任意のコマンドでやり取りする相手であるInvokerを記述します
 class RemoteControl:
-    def submit(self, command: Command):
+    def submit(self, command: Command) -> None:
         command.execute()
 
 
@@ -65,8 +65,8 @@ class RemoteControl:
 
 bulb = Bulb()
 
-turnOn = TurnOn(bulb)
-turnOff = TurnOff(bulb)
+turnOn: Command = TurnOn(bulb)
+turnOff: Command = TurnOff(bulb)
 
 # 直実行
 turnOn.execute()

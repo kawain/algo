@@ -8,7 +8,7 @@ import re
 
 files = [
     p for p in glob.glob('./**', recursive=True)
-    if re.search(r'\.[exe|out]', p)
+    if re.search(r'\.(exe|out)$', p)
 ]
 
 for v in files:

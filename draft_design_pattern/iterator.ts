@@ -1,3 +1,5 @@
+export {};
+
 class RadioStation {
   constructor(private frequency: number) {}
   getFrequency(): number {

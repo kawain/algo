@@ -26,8 +26,8 @@ method makeInterviewer(
 
 
 proc takeInterview(self: HiringManager) =
-  self.interviewer = self.makeInterviewer()
-  self.interviewer.askQuestions()
+  let interviewer = self.makeInterviewer()
+  interviewer.askQuestions()
 
 
 method makeInterviewer(

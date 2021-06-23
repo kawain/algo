@@ -29,8 +29,8 @@ class HiringManager(metaclass=ABCMeta):
         pass
 
     def takeInterview(self) -> None:
-        self.interviewer = self.makeInterviewer()
-        self.interviewer.askQuestions()
+        interviewer = self.makeInterviewer()
+        interviewer.askQuestions()
 
 
 class DevelopmentManager(HiringManager):

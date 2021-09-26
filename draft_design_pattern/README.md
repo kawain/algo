@@ -8,6 +8,9 @@ https://github.com/kamranahmedse/design-patterns-for-humans
 
 https://techracho.bpsinc.jp/hachi8833/2020_12_03/46064
 
+
+https://www.youtube.com/channel/UCmNxeRg-IQ14_MOzEzyy3tA
+
 ## 分類
 
 ### 作成系
